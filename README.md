@@ -38,9 +38,10 @@ python3 -m venv .venv
 .venv/bin/pip install torch numpy polars pyarrow duckdb scipy fastapi "uvicorn[standard]"
 ```
 
-`requirements.txt` pins the same set (minus torch, installed separately there as a
-CPU-only wheel) for the [Dockerfile](Dockerfile), which serves the API in production —
-see step 10.
+`requirements.txt` is a narrower list — just what `api/*.py` actually imports at serving
+time (no torch: `api/pipeline.py`'s scoring is plain numpy; no pyarrow/duckdb/scipy: those
+are only used by `scripts/`) — for the [Dockerfile](Dockerfile), which serves the API in
+production. See step 10.
 
 Every command below runs from the repository root. Nothing under `data/` is versioned.
 

@@ -18,7 +18,6 @@ from typing import Literal
 
 import numpy as np
 import polars as pl
-import torch
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
@@ -68,12 +67,12 @@ class Store:
     ) -> None:
         W = np.load(emb_path).astype(np.float32)
         W /= np.linalg.norm(W, axis=1, keepdims=True) + 1e-9
-        self.W = torch.from_numpy(W)
+        self.W = W
 
         R = np.load(artist_emb_path).astype(np.float32)
         R /= np.linalg.norm(R, axis=1, keepdims=True) + 1e-9
         self.R = R
-        self.RT = torch.from_numpy(R)
+        self.RT = R
 
         df = pl.read_parquet(index_path).sort("album_ix")
         if df.height != W.shape[0]:
@@ -374,7 +373,7 @@ def album2vec_album(req: Album2VecRequest) -> dict:
         if not 0 <= t.album_ix < n:
             raise HTTPException(400, f"album_ix out of range: {t.album_ix}")
 
-    vec = s.W[req.terms[0].album_ix].clone()
+    vec = s.W[req.terms[0].album_ix].copy()
     for t in req.terms[1:]:
         v = s.W[t.album_ix]
         if t.op == "+":
@@ -383,12 +382,12 @@ def album2vec_album(req: Album2VecRequest) -> dict:
             vec = vec - v
         else:
             vec = vec * v
-    norm = vec.norm()
+    norm = np.linalg.norm(vec)
     if norm < 1e-9:
         raise HTTPException(400, "resulting vector is zero (the terms cancel out)")
     vec = vec / norm
 
-    scores = (s.W @ vec).numpy()
+    scores = s.W @ vec
     exclude = {t.album_ix for t in req.terms} if req.exclude_input else set()
     in_pop_range = s.pop >= req.min_pop
     if req.max_pop is not None:
@@ -441,7 +440,7 @@ def artist2vec_artist(req: Artist2VecRequest) -> dict:
         if not 0 <= t.artist_ix < n:
             raise HTTPException(400, f"artist_ix out of range: {t.artist_ix}")
 
-    vec = s.RT[req.terms[0].artist_ix].clone()
+    vec = s.RT[req.terms[0].artist_ix].copy()
     for t in req.terms[1:]:
         v = s.RT[t.artist_ix]
         if t.op == "+":
@@ -450,12 +449,12 @@ def artist2vec_artist(req: Artist2VecRequest) -> dict:
             vec = vec - v
         else:
             vec = vec * v
-    norm = vec.norm()
+    norm = np.linalg.norm(vec)
     if norm < 1e-9:
         raise HTTPException(400, "resulting vector is zero (the terms cancel out)")
     vec = vec / norm
 
-    scores = (s.RT @ vec).numpy()
+    scores = s.RT @ vec
     exclude = {t.artist_ix for t in req.terms} if req.exclude_input else set()
     in_pop_range = s.artist_pop >= req.min_pop
     if req.max_pop is not None:

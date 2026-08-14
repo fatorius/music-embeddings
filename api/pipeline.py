@@ -30,7 +30,6 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 
 import numpy as np
-import torch
 
 NEG = -1e9
 
@@ -112,24 +111,24 @@ def zscore(x: np.ndarray) -> np.ndarray:
 
 
 class Recommender:
-    def __init__(self, W_album: torch.Tensor, W_artist: np.ndarray,
+    def __init__(self, W_album: np.ndarray, W_artist: np.ndarray,
                  artist_ix: np.ndarray, pop: np.ndarray) -> None:
-        self.A = W_album                  # (n_alb, d) normalized, torch
-        self.R = W_artist                 # (n_art, d) normalized, numpy
+        self.A = W_album                  # (n_alb, d) normalized
+        self.R = W_artist                 # (n_art, d) normalized
         self.artist_ix = artist_ix
         self.pop = pop
 
-    def _mask(self, seeds: list[int], p: Params) -> torch.Tensor:
+    def _mask(self, seeds: list[int], p: Params) -> np.ndarray:
         """Additive bias vector: 0 for a valid candidate, NEG for a discarded one."""
-        m = torch.zeros(self.A.shape[0])
-        m[torch.tensor(seeds)] = NEG
+        m = np.zeros(self.A.shape[0])
+        m[np.array(seeds)] = NEG
         if p.min_pop > 0:
-            m[torch.from_numpy(self.pop < p.min_pop)] = NEG
+            m[self.pop < p.min_pop] = NEG
         if p.max_pop is not None:
-            m[torch.from_numpy(self.pop > p.max_pop)] = NEG
+            m[self.pop > p.max_pop] = NEG
         if p.exclude_same_artist:
             seed_artists = list({int(self.artist_ix[i]) for i in seeds})
-            m[torch.from_numpy(np.isin(self.artist_ix, seed_artists))] = NEG
+            m[np.isin(self.artist_ix, seed_artists)] = NEG
         return m
 
     def __call__(self, seeds: list[int], p: Params) -> tuple[list[dict], int]:
@@ -138,12 +137,13 @@ class Recommender:
         n_cand = min(p.n_candidates, n)
 
         # ---- 1. candidates: top-N from EACH seed, then unioned ------------------
-        S = self.A[torch.tensor(seeds)]                   # (n_seeds, d)
+        S = self.A[np.array(seeds)]                       # (n_seeds, d)
         pool: set[int] = set()
         for i in range(len(seeds)):
             sc = self.A @ S[i] + mask
-            top = sc.topk(n_cand)
-            pool.update(top.indices[top.values > NEG / 2].tolist())
+            # partition instead of a full sort: we only need the top n_cand, unordered
+            top = np.argpartition(-sc, n_cand - 1)[:n_cand] if n_cand < n else np.arange(n)
+            pool.update(top[sc[top] > NEG / 2].tolist())
         if not pool:
             return [], 0
         cand = np.fromiter(sorted(pool), dtype=np.int64)
@@ -151,7 +151,7 @@ class Recommender:
         # ---- 2. sum of cosines to ALL seeds, minus their spread ----------------
         # C is kept whole (n_cand, n_seeds): the spread is what separates an album
         # that sits near every seed from one a single seed dragged in.
-        C = (self.A[torch.from_numpy(cand)] @ S.T).numpy()
+        C = self.A[cand] @ S.T
         sum_album = C.sum(1)
         # The std is scaled by n_seeds because the sum grows with the number of seeds
         # and the std does not — without it the penalty would fade as seeds are added.

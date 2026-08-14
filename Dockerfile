@@ -14,11 +14,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certifi
 
 COPY requirements.txt .
 
-# CPU-only wheel, installed from its own index: the default PyPI linux wheel drags in
-# the CUDA runtime (nvidia-*), multiple GB nothing here uses — inference runs on CPU
-# in serving too (see README, "beats MPS by 3.3x" in batches).
-RUN pip install --no-cache-dir torch==2.13.0 --index-url https://download.pytorch.org/whl/cpu \
- && pip install --no-cache-dir -r requirements.txt
+# No torch here: serving is pure numpy (api/pipeline.py), even though the training
+# scripts (not shipped in this image) use torch for the BPR training loop.
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY api/ ./api
 COPY config/ ./config

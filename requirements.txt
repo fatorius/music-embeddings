@@ -1,8 +1,7 @@
-# torch is installed separately (CPU-only wheel) — see Dockerfile.
+# Only what api/*.py actually imports at serving time — no torch (numpy does the
+# matmuls in api/pipeline.py), no pyarrow/duckdb/scipy (unused here; those are for
+# the scripts/ pipeline, run locally with the full set from README's "Requirements").
 numpy==2.5.1
 polars==1.43.2
-pyarrow==25.0.0
-duckdb==1.5.5
-scipy==1.18.0
 fastapi==0.141.1
 uvicorn[standard]==0.52.1
