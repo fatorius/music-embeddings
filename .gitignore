@@ -219,3 +219,7 @@ __marimo__/
 
 # Dados do projeto (dumps, parquet) — nunca versionar
 data/
+
+# Release archive built at the repo root per README step 10 (zip -r data.zip ...)
+/data.zip
+/data.tar.gz

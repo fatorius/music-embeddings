@@ -6,9 +6,10 @@ FROM python:3.14-slim
 
 WORKDIR /app
 
-# curl+ca-certificates fetch DATA_URL over HTTPS; tar (already in the base image)
-# extracts it.
-RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates \
+# curl+ca-certificates fetch DATA_URL over HTTPS; tar (already in the base image) or
+# unzip extracts it, depending on the asset's format. sha256sum (coreutils) is already
+# present, for DATA_SHA256 verification.
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates unzip \
  && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .

@@ -491,14 +491,21 @@ def artist(artist_ix: int) -> dict:
     return s.acard(artist_ix)
 
 
-@app.get("/")
-def index() -> FileResponse:
+@app.get("/", response_model=None)
+def index() -> FileResponse | JSONResponse:
+    """Serves the bundled UI if one is mounted (FRONT_DIST) — e.g. local single-process
+    dev. In the Docker deployment there is no front/dist by design (the UI is built and
+    hosted separately, on GitHub Pages), so this is a plain banner, not an error: hitting
+    `/` on the API host directly is not part of the intended flow.
+    """
     entry = FRONT_DIST / "index.html"
     if not entry.exists():
-        raise HTTPException(
-            503,
-            "front/dist não encontrado — rode `npm install && npm run build` em front/, "
-            "ou `npm run dev` para o servidor de desenvolvimento",
+        return JSONResponse(
+            {
+                "service": "Recomendação de álbuns por similaridade",
+                "docs": "/docs",
+                "note": "this deployment serves /api only — the UI is hosted separately",
+            }
         )
     return FileResponse(entry)
 

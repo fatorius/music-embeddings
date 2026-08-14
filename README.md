@@ -213,18 +213,21 @@ repo, so they're published as a **GitHub Release asset** instead, and the contai
 downloads them on first start:
 
 ```bash
-tar -czf data.tar.gz data/embeddings data/serve   # run from the repo root
-gh release create data-v1 data.tar.gz --title "Serving data v1" --notes "album_final + artist_final"
+zip -r data.zip data/embeddings data/serve   # run from the repo root — .tar.gz works too
+gh release create data-v1 data.zip --title "Serving data v1" --notes "album_final + artist_final"
+shasum -a 256 data.zip   # save this — it goes in DATA_SHA256 below
 ```
 
 The archive must be rooted at `data/` (i.e. `data/embeddings/...`, `data/serve/...`), since
-it's extracted relative to the container's working directory. It doesn't need
-`data/serve/covers.sqlite` / `artist_photos.sqlite` — those are optional caches the API
-rebuilds on demand (see steps 7 and 9) — but including them avoids the oEmbed warm-up cost
-on a fresh deploy.
+it's extracted relative to the container's working directory —
+`docker-entrypoint.sh` picks `unzip` or `tar` based on the `DATA_URL` extension. It
+doesn't need `data/serve/covers.sqlite` / `artist_photos.sqlite` — those are optional
+caches the API rebuilds on demand (see steps 7 and 9) — but including them avoids the
+oEmbed warm-up cost on a fresh deploy.
 
 Copy [.env.example](.env.example) to `.env` and set `DATA_URL` to that asset's download
-URL (`gh release list` / the release page has it), then:
+URL (`gh release view --json assets` / the release page has it) and `DATA_SHA256` to the
+checksum from above (GitHub also shows it per-asset via the API/`gh release view`), then:
 
 ```bash
 docker build -t album-api .
@@ -232,12 +235,18 @@ docker run -p 8000:8000 --env-file .env -v album-data:/app/data album-api   # ht
 ```
 
 `docker-entrypoint.sh` checks for `data/serve/album_index.parquet` on start; if it's
-missing, it downloads `DATA_URL` and extracts it before handing off to uvicorn. `-v
-album-data:/app/data` is a named volume, so the download only happens once — subsequent
-restarts reuse it. (A bind mount to a local `data/` you already populated via steps 0-9
-works too, and skips the download entirely.) `CORS_ORIGINS` restricts which origins may
-call the API (comma-separated, e.g. `https://<user>.github.io`); it defaults to `*`, which
-is safe here since the API takes no cookies or auth headers.
+missing, it downloads `DATA_URL`, verifies it against `DATA_SHA256` when set (skipped
+otherwise — a mismatch exits with an error rather than serving on unverified data), and
+extracts it before handing off to uvicorn. `-v album-data:/app/data` is a named volume, so
+the download only happens once — subsequent restarts reuse it. (A bind mount to a local
+`data/` you already populated via steps 0-9 works too, and skips the download entirely.)
+`CORS_ORIGINS` restricts which origins may call the API (comma-separated, e.g.
+`https://<user>.github.io`); it defaults to `*`, which is safe here since the API takes no
+cookies or auth headers.
+
+Hitting the API's own root (`/`) directly returns a small JSON banner pointing at `/docs`,
+not the UI — there is no front/dist in this image by design, so that's expected, not a
+misconfiguration. The UI is only ever reached through its own GitHub Pages URL.
 
 For local iteration without Docker, run uvicorn directly against the venv from step "Requirements":
 
