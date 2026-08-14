@@ -281,7 +281,7 @@ cd front && VITE_API_BASE=https://<api-host> npm run build
 
 Two things only matter for the Pages deployment, not local dev:
 
-- `front/vite.config.ts` sets `base: '/album-recommendation-system/'` for `build` (not
+- `front/vite.config.ts` sets `base: '/music-embeddings/'` for `build` (not
   `dev`) — Pages serves a project site under `/<repo>/`, not `/`, and every asset URL
   needs that prefix. `main.tsx` reads it back via `import.meta.env.BASE_URL` as the
   router's `basename`, so client-side links resolve correctly. Renaming the repo means
