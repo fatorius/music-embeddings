@@ -1,0 +1,13 @@
+.git
+.venv
+data
+front
+scripts
+__pycache__
+**/__pycache__
+*.pyc
+.DS_Store
+README.md
+.env
+.env.*
+!.env.example

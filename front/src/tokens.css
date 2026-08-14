@@ -1,0 +1,92 @@
+/* Hallmark · genre: atmospheric · macrostructure: custom app-shell (see design.md)
+ * theme: custom (Spotify-tuned green) · nav: N5 · footer: Ft2
+ * paper oklch(14% 0.014 262) · accent oklch(80% 0.190 152) · display: Manrope · body: Inter
+ */
+:root {
+  /* ---------- surfaces ---------- */
+  --color-paper: oklch(14% 0.014 262);
+  --color-paper-2: oklch(19% 0.016 262);
+  --color-paper-3: oklch(24% 0.018 262);
+  --color-paper-4: oklch(15% 0.016 262 / 0.85);
+
+  /* ---------- ink ---------- */
+  --color-ink: oklch(94% 0.01 250);
+  --color-ink-2: oklch(66% 0.02 255);
+  --color-rule: oklch(30% 0.02 262);
+
+  /* ---------- accents ---------- */
+  --color-accent: oklch(80% 0.19 152);
+  --color-accent-ink: oklch(15% 0.03 152);
+  --color-accent-2: oklch(80% 0.15 85);
+  --color-negative: oklch(74% 0.14 25);
+  --color-focus: oklch(80% 0.19 152);
+
+  /* atmospheric canvas blooms */
+  --bloom-1: oklch(45% 0.14 152 / 0.30);
+  --bloom-2: oklch(45% 0.13 70 / 0.16);
+
+  /* ---------- legacy aliases (kept so VinylLoader.tsx / covers.css / SearchBox.css
+     need no edits — they already reference these names) ---------- */
+  --bg: var(--color-paper);
+  --panel: var(--color-paper-2);
+  --line: var(--color-rule);
+  --fg: var(--color-ink);
+  --dim: var(--color-ink-2);
+  --accent: var(--color-accent);
+  --accent-ink: var(--color-accent-ink);
+  --hover: var(--color-paper-3);
+  --row-hover: var(--color-paper-2);
+  --warn: var(--color-negative);
+  --mul: var(--color-accent-2);
+
+  /* ---------- type ---------- */
+  --font-display: 'Manrope', ui-sans-serif, -apple-system, 'Segoe UI', sans-serif;
+  --font-body: 'Inter', ui-sans-serif, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-md: 0.9375rem;
+  --text-lg: 1.1875rem;
+  --text-xl: 1.75rem;
+  --text-2xl: 2.25rem;
+  --text-display: clamp(2.25rem, 4vw + 1rem, 3.5rem);
+
+  /* ---------- spacing (4pt scale) ---------- */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4.5rem;
+  --space-3xl: 7rem;
+
+  /* ---------- motion ---------- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
+  --dur-slow: 450ms;
+
+  /* ---------- shape ---------- */
+  --radius-card: 10px;
+  --radius-pill: 999px;
+  --radius-input: 10px;
+
+  color-scheme: dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0.01ms;
+    --dur-base: 0.01ms;
+    --dur-slow: 0.01ms;
+  }
+}

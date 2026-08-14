@@ -1,0 +1,19 @@
+[weights]
+w_album = 0.6
+w_artist = 0.15
+w_pop = 0.25
+
+# Desconto por desequilíbrio entre os seeds: quanto do desvio-padrão dos cossenos
+# por seed sai do termo de álbum. 0 = comportamento aditivo puro (o ranking passa a
+# ser o do cosseno ao centroide).
+consistencia = 0.5
+
+dup_penalty = 0.1
+
+[popularity]
+pico = 30
+largura = 1.0
+
+[retrieval]
+candidatos_por_seed = 1000
+resultados = 5

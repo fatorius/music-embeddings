@@ -1,0 +1,214 @@
+/* Hallmark · genre: atmospheric · macrostructure: custom app-shell (see design.md)
+ * theme: custom (Spotify-tuned green) · nav: N5 floating pill · footer: Ft2 inline
+ */
+
+/* ---------- header / nav ---------- */
+
+.siteHeader {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  justify-self: start;
+  min-width: 0;
+  overflow: hidden;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-md);
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  text-decoration: none;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+.wordmark:hover {
+  opacity: 0.82;
+}
+
+.ghLink {
+  justify-self: end;
+  font: 600 var(--text-xs) / 1 var(--font-mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-ink-2);
+  text-decoration: none;
+  padding: var(--space-2xs) var(--space-sm);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-pill);
+  transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+}
+.ghLink:hover,
+.ghLink:focus-visible {
+  color: var(--color-ink);
+  border-color: var(--color-accent);
+  background: var(--color-paper-2);
+}
+
+.topnav {
+  justify-self: center;
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--color-paper-4);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset, 0 12px 30px -14px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.topnav a {
+  color: var(--color-ink-2);
+  text-decoration: none;
+  font: 600 var(--text-sm) / 1 var(--font-body);
+  padding: var(--space-2xs) var(--space-sm);
+  border-radius: var(--radius-pill);
+  transition: color var(--dur-fast) var(--ease-out), background var(--dur-base) var(--ease-out);
+}
+.topnav a:hover {
+  color: var(--color-ink);
+  background: var(--color-paper-3);
+}
+.topnav a.active {
+  color: var(--color-accent-ink);
+  background: var(--color-accent);
+}
+.topnav a.active:hover {
+  background: var(--color-accent);
+}
+
+/* ---------- page shell ---------- */
+
+.wrap {
+  max-width: 960px;
+  min-height: calc(100vh - 140px);
+  margin: 0 auto;
+  padding: var(--space-lg) var(--space-md) var(--space-2xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: pageIn var(--dur-slow) var(--ease-out) both;
+}
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-display);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin: 0;
+  font-weight: 800;
+  text-align: center;
+}
+.sub {
+  color: var(--color-ink-2);
+  font-size: var(--text-md);
+  max-width: 46ch;
+  text-align: center;
+  margin: var(--space-xs) 0 var(--space-lg);
+}
+
+/* Um aviso, não um erro: informa sem competir com o campo de busca logo abaixo. */
+.cutoff {
+  color: var(--color-ink-2);
+  font: 500 var(--text-xs) / 1.4 var(--font-mono);
+  letter-spacing: 0.02em;
+  margin: -6px 0 var(--space-md);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  align-items: center;
+  margin: var(--space-md) 0 var(--space-lg);
+}
+button.go {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+  border: none;
+  border-radius: var(--radius-pill);
+  padding: 0.75em 1.6em;
+  font: 700 var(--text-md) / 1 var(--font-body);
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  box-shadow: 0 8px 24px -10px oklch(80% 0.19 152 / 0.55);
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out),
+    filter var(--dur-fast) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
+}
+button.go:hover:not(:disabled):not([aria-disabled='true']) {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px -10px oklch(80% 0.19 152 / 0.65);
+  filter: brightness(1.05);
+}
+button.go:active:not(:disabled):not([aria-disabled='true']) {
+  transform: translateY(0);
+  box-shadow: 0 6px 16px -10px oklch(80% 0.19 152 / 0.55);
+}
+button.go:disabled,
+button.go[aria-disabled='true'] {
+  opacity: 0.4;
+  box-shadow: none;
+}
+button.go:disabled {
+  cursor: default;
+}
+
+.appMsg {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  color: var(--color-ink-2);
+  font-size: var(--text-sm);
+  padding: var(--space-sm) var(--space-md);
+  margin-top: var(--space-sm);
+  background: var(--color-paper-2);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-card);
+  animation: msgIn var(--dur-base) var(--ease-out) both;
+}
+.appMsg.warn {
+  color: var(--color-negative);
+  border-color: oklch(74% 0.14 25 / 0.35);
+}
+@keyframes msgIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@media (max-width: 640px) {
+  .siteHeader {
+    grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  }
+  .ghLink {
+    display: none;
+  }
+  .topnav {
+    justify-self: end;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wrap,
+  .appMsg {
+    animation-duration: 0.01ms;
+  }
+}

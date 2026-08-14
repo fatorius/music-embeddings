@@ -1,0 +1,40 @@
+.eqMark {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+.eqMark rect {
+  fill: var(--color-accent);
+}
+.eqMark .bar1 {
+  animation: eqMarkBounce 1.1s ease-in-out infinite;
+}
+.eqMark .bar2 {
+  animation: eqMarkBounce 1.1s ease-in-out infinite;
+  animation-delay: 0.2s;
+}
+.eqMark .bar3 {
+  animation: eqMarkBounce 1.1s ease-in-out infinite;
+  animation-delay: 0.4s;
+}
+@keyframes eqMarkBounce {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eqMark .bar1,
+  .eqMark .bar2,
+  .eqMark .bar3 {
+    animation: none;
+    transform: scaleY(0.7);
+  }
+}

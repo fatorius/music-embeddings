@@ -1,0 +1,132 @@
+.seedGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-2xs);
+  width: 100%;
+  margin: var(--space-md) 0 2px;
+}
+/* sem seeds não há nada a mostrar — nem a margem */
+.seedGrid:empty {
+  display: none;
+}
+
+.seed {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: seedIn var(--dur-base) var(--ease-out) both;
+}
+@keyframes seedIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+.seedCover {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+}
+.seed:hover .seedCover,
+.seed:focus-within .seedCover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 28px -14px oklch(80% 0.19 152 / 0.5);
+}
+/* a capa preenche a célula; quem manda no tamanho aqui é a grade */
+.seed .cover {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.seed:hover .cover,
+.seed:focus-within .cover {
+  transform: scale(1.06);
+}
+
+/* Sempre visível — mesmo tratamento do .eqLabel em Album2Vec/Artist2Vec. */
+.seedLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 600 var(--text-xs) / 1.2 var(--font-body);
+  color: var(--color-ink);
+  text-align: center;
+}
+
+.seedX {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.65);
+  color: var(--color-ink);
+  font: 600 16px/1 inherit;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+}
+.seedX:hover {
+  background: var(--color-negative);
+  color: var(--color-accent-ink);
+}
+/* focus-within: o botão continua alcançável por teclado mesmo invisível */
+.seed:hover .seedX,
+.seed:focus-within .seedX {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.seedCap {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-md) var(--space-2xs) var(--space-2xs);
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.88));
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  pointer-events: none;
+}
+.seed:hover .seedCap,
+.seed:focus-within .seedCap {
+  opacity: 1;
+  transform: translateY(0);
+}
+.seedCap span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.seedAlbum {
+  font: 600 var(--text-xs) / 1.3 var(--font-body);
+}
+.seedArtist {
+  font-size: 11px;
+  color: var(--color-ink-2);
+}
+
+@media (max-width: 640px) {
+  .seedGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seed {
+    animation-duration: 0.01ms;
+  }
+}

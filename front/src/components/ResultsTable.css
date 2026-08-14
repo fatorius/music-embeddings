@@ -1,0 +1,83 @@
+.resultsTable table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.resultsTable th {
+  text-align: left;
+  font-size: 12px;
+  color: var(--dim);
+  font-weight: 500;
+  padding: 0 10px 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.resultsTable td {
+  padding: 10px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.resultsTable tr:hover td {
+  background: var(--row-hover);
+}
+
+.resultsTable td.num {
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.resultsTable a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.resultsTable a:hover {
+  text-decoration: underline;
+}
+
+.resultsTable .artist {
+  color: var(--dim);
+  font-size: 13px;
+}
+
+.resultsTable .addseed {
+  background: none;
+  border: 1px solid var(--line);
+  color: var(--dim);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.resultsTable .addseed:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.resultsTable td.comp {
+  color: var(--dim);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.resultsTable .up {
+  color: var(--accent);
+}
+
+.resultsTable .down {
+  color: var(--warn);
+}
+
+.resultsTable .resultsFoot {
+  padding-top: 12px;
+  font-size: 12px;
+}
+.resultsTable .albumCell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

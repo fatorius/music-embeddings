@@ -1,0 +1,84 @@
+.vinylDisc {
+  transform-origin: 100px 108px;
+  animation: vinylSpin 2.4s linear infinite;
+}
+
+@keyframes vinylSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.vinylArm {
+  transform-origin: 168px 34px;
+  animation: vinylArmSway 2.4s ease-in-out infinite;
+}
+
+@keyframes vinylArmSway {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(4deg);
+  }
+}
+
+.vinylShadow {
+  fill: #000;
+  opacity: 0.25;
+  animation: vinylShadowPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes vinylShadowPulse {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.18;
+  }
+}
+
+/* Notas: sobem, ganham e perdem opacidade, em ciclos defasados */
+.vinylNote {
+  opacity: 0;
+  animation: vinylNoteFloat 2.7s ease-out infinite;
+}
+.vinylNote.note2 {
+  animation-delay: 0.9s;
+}
+.vinylNote.note3 {
+  animation-delay: 1.8s;
+  animation-duration: 3s;
+}
+
+@keyframes vinylNoteFloat {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  20% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-34px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vinylDisc,
+  .vinylArm,
+  .vinylShadow,
+  .vinylNote {
+    animation: none;
+  }
+  /* Sem animação as notas ficariam invisíveis */
+  .vinylNote {
+    opacity: 0.8;
+  }
+}

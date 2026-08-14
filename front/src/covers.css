@@ -1,0 +1,10 @@
+.cover {
+  flex: none;
+  border-radius: 4px;
+  object-fit: cover;
+  background: var(--hover);
+}
+
+.cover-empty {
+  border: 1px solid var(--line);
+}

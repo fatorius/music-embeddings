@@ -1,0 +1,99 @@
+.searchbox {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+}
+
+.searchbox input[type='text'] {
+  background: var(--color-paper-2);
+  border: 1px solid var(--color-rule);
+  color: var(--color-ink);
+  border-radius: var(--radius-input);
+  padding: 0.8em 1em;
+  font: var(--text-md) / 1.2 var(--font-body);
+  width: 100%;
+  min-width: 320px;
+  transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.searchbox input::placeholder {
+  color: var(--color-ink-2);
+}
+
+.searchbox input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px oklch(80% 0.19 152 / 0.16);
+}
+
+.dropdown {
+  position: absolute;
+  z-index: 10;
+  left: 0;
+  right: 0;
+  top: calc(100% + 8px);
+  background: var(--color-paper-2);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-input);
+  max-height: 340px;
+  overflow-y: auto;
+  box-shadow: 0 20px 44px -18px rgba(0, 0, 0, 0.65);
+  animation: dropdownIn var(--dur-fast) var(--ease-out) both;
+}
+@keyframes dropdownIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.opt {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-2xs) var(--space-sm);
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-rule);
+  animation: optIn var(--dur-base) var(--ease-out) both;
+}
+@keyframes optIn {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+}
+.opt:nth-child(1) { animation-delay: 0ms; }
+.opt:nth-child(2) { animation-delay: 15ms; }
+.opt:nth-child(3) { animation-delay: 30ms; }
+.opt:nth-child(4) { animation-delay: 45ms; }
+.opt:nth-child(5) { animation-delay: 60ms; }
+.opt:nth-child(6) { animation-delay: 75ms; }
+.opt:nth-child(n + 7) { animation-delay: 90ms; }
+
+.optText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.opt:last-child {
+  border-bottom: none;
+}
+
+.opt:hover,
+.opt.active {
+  background: var(--color-paper-3);
+}
+
+.opt .a {
+  color: var(--color-ink-2);
+  font-size: var(--text-sm);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dropdown,
+  .opt {
+    animation-duration: 0.01ms;
+  }
+}

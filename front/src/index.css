@@ -1,0 +1,45 @@
+@import './tokens.css';
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: clip;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font: var(--text-md) / 1.55 var(--font-body);
+  overflow-x: clip;
+}
+
+/* Atmospheric canvas: two fixed, non-animated blooms behind everything.
+   Fixed-attached so it reads as one continuous ground, not a per-page repaint. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(60% 50% at 18% 0%, var(--bloom-1), transparent 65%),
+    radial-gradient(50% 45% at 100% 15%, var(--bloom-2), transparent 60%);
+  pointer-events: none;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
