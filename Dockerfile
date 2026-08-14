@@ -32,5 +32,13 @@ USER app
 
 EXPOSE 8000
 
+# Required for Coolify/Traefik: without a Docker health status, the platform never
+# adds the container to the routable backend pool ("no available server") — it isn't
+# optional there, unlike on platforms that just watch for the process staying up.
+# start-period covers a cold volume's first-boot download; a warm volume (the normal
+# case — see README, pre-warming) reports healthy in seconds regardless.
+HEALTHCHECK --interval=15s --timeout=5s --start-period=10m \
+  CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/config', timeout=3)" || exit 1
+
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["uvicorn", "api.app:app", "--host", "0.0.0.0", "--port", "8000"]
